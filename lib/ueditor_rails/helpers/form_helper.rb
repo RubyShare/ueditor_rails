@@ -7,7 +7,7 @@ module UeditorRails
       include ActionView::Helpers::JavaScriptHelper
 
       def ueditor_text(object_name, method = nil, options = {})
-        instance_tag = ActionView::Base::InstanceTag.new(object_name, method, self, options.delete(:object))
+        instance_tag = ActionView::Base::InstanceTag.new
         instance_tag.send(:add_default_name_and_id, options) if options[:id].blank?
 
         element_id = options.delete('id')
