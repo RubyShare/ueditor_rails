@@ -11,7 +11,7 @@ module UeditorRails
 
   mattr_accessor :enable_cross_domain
 
-  class<< self
+  class << self
 
     def enable_cross_domain
       @@enable_cross_domain ||= false
