@@ -8,6 +8,22 @@ module UeditorRails
 
       def ueditor_text(object_name, method = nil, options = {})
         instance_tag = ActionView::Base::InstanceTag.new
+        def instance_tag.add_default_name_and_id(options)
+          if options.has_key?("index")
+            options["name"] ||= tag_name_with_index(options["index"])
+            options["id"] = options.fetch("id"){ tag_id_with_index(options["index"]) }
+            options.delete("index")
+          elsif defined?(@auto_index)
+            options["name"] ||= tag_name_with_index(@auto_index)
+            options["id"] = options.fetch("id"){ tag_id_with_index(@auto_index) }
+          else
+            options["name"] ||= tag_name
+            options["id"] = options.fetch("id"){ tag_id }
+          end
+
+          options["name"] += "[]" if options["multiple"] && !options["name"].ends_with?("[]")
+          options["id"] = [options.delete('namespace'), options["id"]].compact.join("_").presence
+        end
         instance_tag.send(:add_default_name_and_id, options) if options[:id].blank?
 
         element_id = options.delete('id')
@@ -21,6 +37,7 @@ module UeditorRails
         output_buffer << javascript_tag {Util.js_replace(element_id, options.stringify_keys)}
         output_buffer
       end
+
     end
   end
 end
